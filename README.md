@@ -2,8 +2,8 @@
 
 Báo cáo đồ án Socket, bộ môn Mạng máy tính  
 
-<p style="text-align:center">
-  <img src="report/hcmus.png" alt="HCMUS">
+<p align="center">
+<img width="300" height="300" src="report/hcmus.png">
 </p>
 
 ## Thành viên
@@ -13,13 +13,10 @@ Lý Quốc Bình - 1712292
 
 ## Nội dung
 
-+ Chi tiết mã nguồn
++ Mã nguồn
 + Demo chương trình
 
-## Github
-[https://github.com/LyQuocBinh1999/Socket_WebServer](https://github.com/LyQuocBinh1999/Socket_WebServer)
-
-# Chi tiết mã nguồn
+# Mã nguồn
 
 Hàm main của chương trình:
 
@@ -129,4 +126,3 @@ Nếu người dùng gõ vào địa chỉ không tồn tại (ví dụ _localho
 - Chức năng:  
   - Chưa có chức năng cấp quyền cho nhiều người dùng (Hiện tại chỉ 1 người dùng)
   - Chưa xử lý được Javascript
-  - Chưa tối ưu hóa chức năng multithreading
