@@ -63,13 +63,13 @@ private:
 
     /*---------- Utility methods ----------*/
 
-    void handleGET(const std::string& request, const std::string* pages, std::string& response);
+    void handleGET(const std::string& request, const std::string* pages, std::string& response, bool authorized);
 
-    void handlePOST(const std::string& request, const std::string* pages, std::string& response);
+    void handlePOST(const std::string& request, const std::string* pages, std::string& response, bool& authorized);
 
     std::string getResponse(std::string& content, int statusCode, const std::string& message); //Required for handleGET and handlePOST methods create every suitable response respected to every request
 
-    bool authentified(const std::string& username, const std::string& password); //Required for handlePOST method, checking for valid usernames and emails
+    bool authentify(const std::string& username, const std::string& password); //Required for handlePOST method, checking for valid usernames and emails
 
     void cleanUp(); //Clean up resources
 
@@ -113,7 +113,7 @@ Nhập `username` và `password` được quy định trong file __userinfo.dat_
 
 ![info](report/info.png)
 
-Nếu nhập sai, trình duyệt sẽ mở file __index_error.html__ (_đường dẫn: localhost:\[port\]/index_error.html_) như hình:
+Nếu nhập sai, trình duyệt báo lỗi trên trang __index.html__ như hình:
 
 ![index_error](report/index_error.png)
 

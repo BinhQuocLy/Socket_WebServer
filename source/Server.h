@@ -30,7 +30,6 @@ public:
         FileReader::readContent("index.html", _pages[0]);
         FileReader::readContent("info.html", _pages[1]);
         FileReader::readContent("error.html", _pages[2]);
-        FileReader::readContent("index_error.html", _pages[3]);
 
         initializeWinSock();
     }
@@ -133,57 +132,88 @@ private:
         int recvbuflen = DEFAULT_BUFLEN;
         std::string request;
         std::string response;
+        bool authorized = false;
 
         //Receive requests
-        std::cout << "Waiting for new request from " << clientSocket << std::endl;
-        iRecvResult = recv(clientSocket, recvbuf, recvbuflen, 0);
-        if (iRecvResult > 0) {
-            std::cout << "Received request\n";
-            request.assign(recvbuf, iRecvResult);
+        do {
+            std::cout << "Waiting for new request from " << clientSocket << std::endl;
+            iRecvResult = recv(clientSocket, recvbuf, recvbuflen, 0);
+            if (iRecvResult > 0) {
+                std::cout << "Received request\n";
+                request.assign(recvbuf, iRecvResult);
 
-            if (request.find("GET") == 0) {
-                handleGET(request, pages, response);
+                if (request.find("GET") == 0) {
+                    handleGET(request, pages, response, authorized);
+                }
+                else {
+                    handlePost(request, pages, response, authorized);
+                }
+
+                iSendResult = send(clientSocket, response.c_str(), response.size(), 0);
+                if (iSendResult == SOCKET_ERROR) {
+                    std::cerr << "send failed with error: " << WSAGetLastError() << std::endl;
+                    closesocket(clientSocket);
+                    return;
+                }
+                std::cout << "Sent response\n";
+            }
+            else if (iRecvResult == 0) {
+                std::cout << "No request received\n";
             }
             else {
-                handlePost(request, pages, response);
-            }
-
-            iSendResult = send(clientSocket, response.c_str(), response.size(), 0);
-            if (iSendResult == SOCKET_ERROR) {
-                std::cerr << "send failed with error: " << WSAGetLastError() << std::endl;
+                std::cerr << "recv failed with error: " << WSAGetLastError() << std::endl;
                 closesocket(clientSocket);
-                throw(std::runtime_error("failed to send responses"));
+                return;
             }
-            std::cout << "Sent response\n";
-        }
-        else if (iRecvResult == 0) {
-            std::cout << "No request received\n";
-        }
-        else {
-            std::cerr << "recv failed with error: " << WSAGetLastError() << std::endl;
-            closesocket(clientSocket);
-            throw(std::runtime_error("failed to receive requests"));
-        }
+        } while (iRecvResult > 0);
 
         //Shutdown the connection
         std::cout << "Connection closing...\n\n";
         iRecvResult = shutdown(clientSocket, SD_SEND);
         if (iRecvResult == SOCKET_ERROR) {
-            printf("shutdown failed with error: %d\n", WSAGetLastError());
+            std::cout << "shutdown failed with error: " << WSAGetLastError() << std::endl;
             closesocket(clientSocket);
-            throw(std::runtime_error("failed to shutdown"));
+            return;
         }
     }
 
 
     /*---------- Utility methods ----------*/
 
-    void handleGET(const std::string& request, const std::string* pages, std::string& response) {
+    void handleGET(const std::string& request, const std::string* pages, std::string& response, bool& authorized) {
+        /**Redirect to correct URLs**/
         if (request.find("/ ") != -1 ||
-            request.find("/index.html ") != -1) {
+            request.find("/index ") != -1) {
+            response = "<script>window.location.href = \"index.html\";</script>";
+            response = getResponse(response, 301, "Moved permanently");
+            std::cout << "Redirect to index.html\n";
+            return;
+        }
+
+        if (request.find("info ") != -1) {
+            response = "<script>window.location.href = \"info.html\";</script>";
+            response = getResponse(response, 301, "Moved permanently");
+            std::cout << "Redirect to info.html\n";
+            return;
+        }
+
+        /**Process correct URLs**/
+        if (request.find("/index.html ") != -1) {
             response = pages[0];
             response = getResponse(response, 200, "OK");
             std::cout << "Sent index.html\n";
+        }
+        else if (request.find("/info.html ") != -1) {
+            if (authorized == false) {
+                response = "<script>window.location.href = \"index.html\";</script>";
+                response = getResponse(response, 301, "Moved permanently");
+                std::cout << "Redirect to index.html\n";
+            }
+            else {
+                response = pages[1];
+                response = getResponse(response, 200, "OK");
+                std::cout << "Sent info.html\n";
+            }
         }
         else {
             response = pages[2];
@@ -192,32 +222,24 @@ private:
         }
     }
 
-    void handlePost(const std::string& request, const std::string* pages, std::string& response) {
-        if (request.find("/info.html ") != -1) {
-            //Get username and password
-            std::string token = request.substr(request.find("username"));
-            int pos = token.find('=') + 1;
-            std::string username = token.substr(pos, token.find('&') - pos);
-            token = token.substr(token.find('&'));
-            pos = token.find('=') + 1;
-            std::string password = token.substr(pos);
+    void handlePost(const std::string& request, const std::string* pages, std::string& response, bool& authorized) {
+        //Get username and password
+        std::string token = request.substr(request.find("username"));
+        int pos = token.find('=') + 1;
+        std::string username = token.substr(pos, token.find('&') - pos);
+        token = token.substr(token.find('&'));
+        pos = token.find('=') + 1;
+        std::string password = token.substr(pos);
 
-            //Authentify users
-            if (authentified(username, password)) {
-                response = pages[1];
-                response = getResponse(response, 200, "OK");
-                std::cout << "Sent info.html\n";
-            }
-            else {
-                response = pages[3];
-                response = getResponse(response, 200, "OK");
-                std::cout << "Wrong username or password - sent index_error.html\n";
-            }
+        //Authentify users
+        authorized = authentify(username, password);
+        if (authorized) {
+            response = getResponse(response, 302, "Found");
+            std::cout << "Login successful\n";
         }
         else {
-            response = pages[2];
-            response = getResponse(response, 404, "ERROR");
-            std::cout << "Sent error.html\n";
+            response = getResponse(response, 401, "Unauthorized");
+            std::cout << "Wrong username or password\n";
         }
     }
 
@@ -232,7 +254,7 @@ private:
         return content;
     }
 
-    bool authentified(const std::string& username, const std::string& password) {
+    bool authentify(const std::string& username, const std::string& password) {
         //Proccess string to check for valid username and password
         std::mutex securedResouce; //Prevent deadlock
         std::string token;
@@ -255,7 +277,7 @@ private:
     }
 private:
     char _port[5];
-    std::string _pages[4];
+    std::string _pages[3];
     addrinfo* _result;
     SOCKET _listenSocket;
 };
