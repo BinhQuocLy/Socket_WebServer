@@ -1,15 +1,8 @@
 # **BÁO CÁO**
 
-<style>
-  img[src$="hcmus"] {
-    display:block;
-    margin: 0 auto;
-  }
-</style>
-
 Báo cáo đồ án Socket, bộ môn Mạng máy tính  
 
-![HCMUS](report/hcmus.png?style=hcmus)
+![HCMUS](report/hcmus.png)
 
 ## Thành viên
 
