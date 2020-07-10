@@ -217,7 +217,7 @@ private:
         }
         else {
             response = pages[2];
-            response = getResponse(response, 404, "ERROR");
+            response = getResponse(response, 404, "Not found");
             std::cout << "Sent error.html\n";
         }
     }
