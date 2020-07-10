@@ -3,7 +3,7 @@
 Báo cáo đồ án Socket, bộ môn Mạng máy tính  
 
 <p align="center">
-<img width="900" height="300" src="report/hcmus.png">
+<img width="300" height="300" src="report/hcmus.png">
 </p>
 
 ## Thành viên
