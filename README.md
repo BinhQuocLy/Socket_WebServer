@@ -125,4 +125,3 @@ Nếu người dùng gõ vào địa chỉ không tồn tại (ví dụ _localho
   - Chạy ổn định nhất trên trình duyệt Microsoft Edge Legacy
 - Chức năng:  
   - Chưa có chức năng cấp quyền cho nhiều người dùng (Hiện tại chỉ 1 người dùng)
-  - Chưa xử lý được Javascript
