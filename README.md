@@ -13,10 +13,10 @@ Lý Quốc Bình - 1712292
 
 ## Nội dung
 
-+ Chi tiết mã nguồn
++ Mã nguồn
 + Demo chương trình
 
-# Chi tiết mã nguồn
+# Mã nguồn
 
 Hàm main của chương trình:
 
