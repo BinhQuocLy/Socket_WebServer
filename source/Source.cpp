@@ -3,8 +3,7 @@
 void main() {
 	try {
 		Server server("3000");
-		std::thread th(&Server::run, &server);
-		th.join();
+		server.run();
 	}
 	catch (std::runtime_error& e) {
 		std::cout << "Run-time error: " << e.what();

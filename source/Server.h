@@ -40,9 +40,10 @@ public:
         bindSocket(_result, _listenSocket);
         listenOnSocket(_listenSocket);
 
+        //Accept client connections
         while (true) {
-            SOCKET clientSocket = acceptRequests();
-            std::thread th(&Server::handleRequests, this, std::ref(clientSocket), _pages);
+            SOCKET clientSocket = acceptConnection();
+            std::thread th(&Server::handleRequests, this, std::ref(clientSocket), _pages); //Handle requests from many clients concurrently
             th.detach();
         }
     }
@@ -81,7 +82,7 @@ private:
             throw(std::runtime_error("failed to get address info"));
         }
 
-        //Create a SOCKET for connecting to server
+        //Create a socket for connecting to server
         listenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
         if (listenSocket == INVALID_SOCKET) {
             std::cerr << "socket failed with error: " << WSAGetLastError() << std::endl;
@@ -111,8 +112,8 @@ private:
         std::cout << "Listening on port " << _port << std::endl;
     }
     
-    SOCKET acceptRequests() {
-        //Accept a client socket
+    SOCKET acceptConnection() {
+        //Accept a client socket/connection
         std::cout << "\nWaiting to accept new connection\n";
         SOCKET clientSocket = accept(_listenSocket, NULL, NULL);
         std::cout << "Accepted " << clientSocket << std::endl;
@@ -120,6 +121,7 @@ private:
         if (clientSocket == INVALID_SOCKET) {
             std::cerr << "accept failed with error: " << WSAGetLastError() << std::endl;
             closesocket(clientSocket);
+            cleanUp();
             throw(std::runtime_error("failed to accept clients"));
         }
         return clientSocket;
@@ -136,31 +138,33 @@ private:
 
         //Receive requests
         do {
-            std::cout << "Waiting for new request from " << clientSocket << std::endl;
             iRecvResult = recv(clientSocket, recvbuf, recvbuflen, 0);
             if (iRecvResult > 0) {
-                std::cout << "Received request\n";
                 request.assign(recvbuf, iRecvResult);
 
-                if (request.find("GET") == 0) {
+                //Handle GET or POST requests
+                if (request.find("GET") != -1) {
                     handleGET(request, pages, response, authorized);
                 }
                 else {
                     handlePost(request, pages, response, authorized);
                 }
 
+                //Send responses
                 iSendResult = send(clientSocket, response.c_str(), response.size(), 0);
                 if (iSendResult == SOCKET_ERROR) {
                     std::cerr << "send failed with error: " << WSAGetLastError() << std::endl;
                     closesocket(clientSocket);
                     return;
                 }
-                std::cout << "Sent response\n";
+
+                //Nothing more to send, proceed to shutdown the connection
+                if (response.find(pages[1]) != -1 ||
+                    response.find(pages[2]) != -1) {
+                    iRecvResult = 0;
+                }
             }
-            else if (iRecvResult == 0) {
-                std::cout << "No request received\n";
-            }
-            else {
+            else if (iRecvResult < 0) {
                 std::cerr << "recv failed with error: " << WSAGetLastError() << std::endl;
                 closesocket(clientSocket);
                 return;
@@ -168,7 +172,7 @@ private:
         } while (iRecvResult > 0);
 
         //Shutdown the connection
-        std::cout << "Connection closing...\n\n";
+        std::cout << "Connection with " << clientSocket << " closing...\n\n";
         iRecvResult = shutdown(clientSocket, SD_SEND);
         if (iRecvResult == SOCKET_ERROR) {
             std::cout << "shutdown failed with error: " << WSAGetLastError() << std::endl;
@@ -231,7 +235,7 @@ private:
         pos = token.find('=') + 1;
         std::string password = token.substr(pos);
 
-        //Authentify users
+        //Authentify the user
         authorized = authentify(username, password);
         if (authorized) {
             response = getResponse(response, 302, "Found");
@@ -244,6 +248,7 @@ private:
     }
 
     std::string getResponse(std::string& content, int statusCode, const std::string& message) {
+        //Create a response string
         content =
             "HTTP/1.1 " +
             std::to_string(statusCode) +
@@ -256,9 +261,9 @@ private:
 
     bool authentify(const std::string& username, const std::string& password) {
         //Proccess string to check for valid username and password
-        std::mutex securedResouce; //Prevent deadlock
+        std::mutex securedResouce; //Used to protect shared resource
         std::string token;
-        securedResouce.lock();
+        securedResouce.lock(); 
         FileReader::readContent("userinfo.dat", token);
         securedResouce.unlock();
         std::string u = token.substr(0, token.find('&'));
@@ -271,6 +276,7 @@ private:
     }
 
     void cleanUp() {
+        //Free up resources
         WSACleanup();
         freeaddrinfo(_result);
         closesocket(_listenSocket);

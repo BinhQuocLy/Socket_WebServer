@@ -24,15 +24,14 @@ Hàm main của chương trình:
 void main() {
 	try {
 		Server server("3000");
-		std::thread th(&Server::run, &server);
-		th.join();
+		server.run();
 	}
 	catch (std::runtime_error& e) {
 		std::cout << "Run-time error: " << e.what();
 	}
 }
 ```
-Prototype của lớp Server:
+Khai báo của lớp Server:
 ``` c
 class Server
 {
@@ -46,7 +45,7 @@ public:
 private:
     /*---------- Socket-based methods ----------*/
 
-    void initializeWinSock(); //Initialize Windows Socket API
+    void initializeWinSock();
 
     void createSocket(addrinfo*& result, SOCKET& listenSocket, const char* port); 
 
@@ -54,7 +53,7 @@ private:
 
     void listenOnSocket(const SOCKET& listenSocket);
     
-    SOCKET acceptRequests(); //Process every request from a client (can handle many clients at a time)
+    SOCKET acceptConnection();
 
     void handleRequests(SOCKET& clientSocket, const std::string* pages);
 
@@ -64,18 +63,17 @@ private:
 
     void handlePOST(const std::string& request, const std::string* pages, std::string& response, bool& authorized);
 
-    std::string getResponse(std::string& content, int statusCode, const std::string& message); //Required for handleGET and handlePOST methods create every suitable response respected to every request
+    std::string getResponse(std::string& content, int statusCode, const std::string& message);
 
-    bool authentify(const std::string& username, const std::string& password); //Required for handlePOST method, checking for valid usernames and emails
+    bool authentify(const std::string& username, const std::string& password);
 
-    void cleanUp(); //Clean up resources
+    void cleanUp();
 
 private:
     char _port[5];
     std::string _pages[4];
     addrinfo* _result;
     SOCKET _listenSocket;
-    std::mutex secureResouce;
 };
 ```
 
@@ -124,4 +122,4 @@ Nếu người dùng gõ vào địa chỉ không tồn tại (ví dụ _localho
   - Không hỗ trợ các trình duyệt có lõi Chromium
   - Chạy ổn định nhất trên trình duyệt Microsoft Edge Legacy
 - Chức năng:  
-  - Chưa có chức năng cấp quyền cho nhiều người dùng (hiện tại chỉ 1 người dùng)
+  - Chưa có chức năng cấp quyền cho nhiều người dùng khác nhau (hiện tại chỉ 1 người dùng đã được đăng kí)
