@@ -112,7 +112,7 @@ Nhập `username` và `password` được quy định trong file __userinfo.dat_
 
 Nếu nhập sai, trình duyệt báo lỗi trên trang __index.html__ như hình:
 
-![index_error](report/index_error.png)
+![index_error](report/index2.png)
 
 Nếu người dùng gõ vào địa chỉ không tồn tại (ví dụ _localhost:[port]/helloabc_) thì trình duyệt sẽ mở file __error.html__ (_đường dẫn: localhost:\[port\]/error.html_) như hình:
 
