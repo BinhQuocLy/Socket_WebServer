@@ -190,39 +190,33 @@ private:
             request.find("/index ") != -1) {
             response = "<script>window.location.href = \"index.html\";</script>";
             response = getResponse(response, 301, "Moved permanently");
-            std::cout << "Redirect to index.html\n";
             return;
         }
 
         if (request.find("info ") != -1) {
             response = "<script>window.location.href = \"info.html\";</script>";
             response = getResponse(response, 301, "Moved permanently");
-            std::cout << "Redirect to info.html\n";
             return;
         }
 
         /**Process correct URLs**/
-        if (request.find("/index.html ") != -1) {
+        if (request.find("/index.html ") != -1) { //Proceed to index.html
             response = pages[0];
             response = getResponse(response, 200, "OK");
-            std::cout << "Sent index.html\n";
         }
         else if (request.find("/info.html ") != -1) {
-            if (authorized == false) {
+            if (authorized == false) { //Unauthorized, proceed to index.html
                 response = "<script>window.location.href = \"index.html\";</script>";
                 response = getResponse(response, 301, "Moved permanently");
-                std::cout << "Redirect to index.html\n";
             }
-            else {
+            else { //Authorized, proceed to info.html
                 response = pages[1];
                 response = getResponse(response, 200, "OK");
-                std::cout << "Sent info.html\n";
             }
         }
-        else {
+        else { //Requested URLs not found
             response = pages[2];
             response = getResponse(response, 404, "Not found");
-            std::cout << "Sent error.html\n";
         }
     }
 
@@ -239,11 +233,9 @@ private:
         authorized = authentify(username, password);
         if (authorized) {
             response = getResponse(response, 302, "Found");
-            std::cout << "Login successful\n";
         }
         else {
             response = getResponse(response, 401, "Unauthorized");
-            std::cout << "Wrong username or password\n";
         }
     }
 
