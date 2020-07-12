@@ -1,5 +1,9 @@
 # **BÁO CÁO**
 
+[![Build](https://img.shields.io/badge/Build-Passing-<COLOR>.svg)](https://shields.io/)
+[![Version](https://img.shields.io/badge/Version-1.0.0-<COLOR>.svg)](https://shields.io/)
+![Size](https://img.shields.io/github/repo-size/LyQuocBinh1999/Socket_WebServer)
+
 Báo cáo đồ án Socket, bộ môn Mạng máy tính  
 
 <p align="center">
