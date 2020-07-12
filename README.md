@@ -1,8 +1,8 @@
 # **BÁO CÁO**
 
-![Version](https://img.shields.io/badge/version-1.2.0-<COLOR>.svg)
-![Contributors](https://img.shields.io/github/contributors/LyQuocBinh1999/Socket_WebServer)
-![Size](https://img.shields.io/github/repo-size/LyQuocBinh1999/Socket_WebServer)
+[![Version](https://img.shields.io/badge/version-1.2.0-<COLOR>.svg)](https://shields.io/)
+[![Contributors](https://img.shields.io/github/contributors/LyQuocBinh1999/Socket_WebServer)](https://shields.io/)
+[![Size](https://img.shields.io/github/repo-size/LyQuocBinh1999/Socket_WebServer)](https://shields.io/)
 
 Báo cáo đồ án Socket, bộ môn Mạng máy tính  
 
