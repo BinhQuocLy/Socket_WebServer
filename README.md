@@ -3,7 +3,7 @@
 Báo cáo đồ án Socket, bộ môn Mạng máy tính  
 
 <p align="center">
-<img width="300" height="300" src="report/hcmus.png">
+<img width="300" height="300" src="https://i.ibb.co/hMWfQYg/hcmus.png">
 </p>
 
 ## Thành viên
@@ -102,19 +102,19 @@ __Chi tiết xem trong [mã nguồn](source/Server.h)__
 
 Sau khi chạy chương trình, ta mở trình duyệt và gõ vào `localhost:[port]` (port tự chọn trong hàm main), trình duyệt sẽ mở file __index.html__ (đường dẫn: _localhost:\[port\]/index.html_) như sau:
 
-![index](report/index.png)
+![index](https://i.ibb.co/vYhnWrV/index.png)
 
 Nhập `username` và `password` được quy định trong file __userinfo.dat__. Nếu nhập đúng trình duyệt sẽ mở file __info.html__ (_đường dẫn: localhost:\[port\]/info.html_) như hình:
 
-![info](report/info.png)
+![info](https://i.ibb.co/RTMr8Cd/info.png)
 
 Nếu nhập sai, trình duyệt báo lỗi trên trang __index.html__ như hình:
 
-![index_error](report/index2.png)
+![index_error](https://i.ibb.co/0YtgWB0/index2.png)
 
 Nếu người dùng gõ vào địa chỉ không tồn tại (ví dụ _localhost:[port]/helloabc_) thì trình duyệt sẽ mở file __error.html__ (_đường dẫn: localhost:\[port\]/error.html_) như hình:
 
-![error](report/error.png)
+![error](https://i.ibb.co/PZQzwRH/error.png)
 
 # Lưu ý
 
