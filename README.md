@@ -12,15 +12,16 @@ Báo cáo đồ án Socket, bộ môn Mạng máy tính
 
 ## Thành viên
 
-| STT     | Họ và tên           | MSSV       |
-| :-----: |:--------------------| :---------:|
-| 1       | Nguyễn Gia Thụy     | 1712809    |
-| 2       | Lý Quốc Bình        | 1712292    |
+| STT     | Họ và tên                   | MSSV            |
+| :-----: |:----------------------------| :--------------:|
+| 1       | Nguyễn Gia Thụy             | 1712809         |
+| 2       | Lý Quốc Bình                | 1712292         |
 
 ## Nội dung
 
-+ Mã nguồn
-+ Demo chương trình
+
+[+ Mã nguồn](#mã-nguồn)  
+[+ Demo chương trình](#demo-chương-trình)
 
 # Mã nguồn
 
