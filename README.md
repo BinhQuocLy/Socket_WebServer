@@ -1,6 +1,5 @@
 # **BÁO CÁO**
 
-[![Version](https://img.shields.io/github/v/release/LyQuocBinh1999/Socket_WebServer)]()
 [![Contributors](https://img.shields.io/github/contributors/LyQuocBinh1999/Socket_WebServer)]()
 [![Size](https://img.shields.io/github/repo-size/LyQuocBinh1999/Socket_WebServer)]()
 
