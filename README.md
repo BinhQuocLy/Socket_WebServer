@@ -19,9 +19,12 @@ Báo cáo đồ án Socket, bộ môn Mạng máy tính
 
 ## Nội dung
 
-
-[+ Mã nguồn](#mã-nguồn)  
-[+ Demo chương trình](#demo-chương-trình)
+<span>
+<ul>
+  <li><a href="#mã-nguồn">Mã nguồn</a></li>
+  <li><a href="#demo-chương-trình">Demo chương trình</a></li>
+</ul>
+</span>
 
 # Mã nguồn
 
