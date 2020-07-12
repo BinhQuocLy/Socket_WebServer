@@ -27,9 +27,9 @@ public:
         _listenSocket = INVALID_SOCKET;
 
         //Pre-load pages
-        FileReader::readContent("index.html", _pages[0]);
-        FileReader::readContent("info.html", _pages[1]);
-        FileReader::readContent("error.html", _pages[2]);
+        FileReader::readContent(".\\resources\\index.html", _pages[0]);
+        FileReader::readContent(".\\resources\\info.html", _pages[1]);
+        FileReader::readContent(".\\resources\\error.html", _pages[2]);
 
         initializeWinSock();
     }
@@ -256,7 +256,7 @@ private:
         std::mutex securedResouce; //Used to protect shared resource
         std::string token;
         securedResouce.lock(); 
-        FileReader::readContent("userinfo.dat", token);
+        FileReader::readContent(".\\resources\\userinfo.dat", token);
         securedResouce.unlock();
         std::string u = token.substr(0, token.find('&'));
         std::string p = token.substr(token.find('&') + 1);
