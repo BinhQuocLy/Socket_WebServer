@@ -1,6 +1,6 @@
 # **BÁO CÁO**
 
-[![Version](https://img.shields.io/badge/version-1.2.0-<COLOR>.svg)](https://shields.io/)
+![Version](https://img.shields.io/badge/version-1.2.0-<COLOR>.svg)
 ![Contributors](https://img.shields.io/github/contributors/LyQuocBinh1999/Socket_WebServer)
 ![Size](https://img.shields.io/github/repo-size/LyQuocBinh1999/Socket_WebServer)
 
